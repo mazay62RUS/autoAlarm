@@ -3,6 +3,10 @@
 #include <Wire.h>  
 #include <DS1307RTC.h>
 
+ // - 5 s 1.5 s 5 
+ // 9 1
+ // - 5 s 5
+
 LiquidCrystal_I2C disp(0x27,16,2);
 
 const byte RELAY_PIN = 5;
@@ -24,6 +28,8 @@ void setup()
 }
 
 void loop() {
+  if ((hour() == 20) && minute() == 0 && (second() == 0)) { disp.noBacklight(); }
+  if ((hour() == 7) && minute() == 0 && (second() == 0)) { disp.backlight(); }
   if ( (hour() == 0) && (minute() == 0) && (second() == 0) && isAuto) { isAuto = true; }
   if ( (hour() == 0) && (minute() == 0) && (second() == 0) && !isAuto){ isShorten = false; isAuto = false; }
   if ( second() == 0 ) { disp.clear(); }
@@ -101,6 +107,7 @@ void currMode()
 {
   if (isShorten  && !isAuto) { disp.setCursor(0,0); disp.print("Short");   }
   if (!isShorten && !isAuto) { disp.setCursor(0,0); disp.print("Typical"); } 
+  //else                { disp.setCursor(0,0); disp.print("Auto");    }
 }
 
 void modeSettings(int btn)
@@ -179,6 +186,11 @@ void typicalDay()
       || ((hour() == 16) && (minute() == 15 && second() == 0 ))
       || ((hour() == 17) && (minute() == 0 &&  second() == 0 ))
       || ((hour() == 17) && (minute() == 5 &&  second() == 0 ))
+      || ((hour() == 17) && (minute() == 50 &&  second() == 0 )))
+      //|| ((hour() == 18) && (minute() == 10 &&  second() == 0 ))
+      //|| ((hour() == 18) && (minute() == 11 &&  second() == 0 ))
+      //|| ((hour() == 18) && (minute() == 12 &&  second() == 0 ))
+      //|| ((hour() == 18) && (minute() == 13 &&  second() == 0 )))
       || ((hour() == 17) && (minute() == 50 && second() == 0 )))
 
      ) { alarm(); } 
@@ -269,4 +281,3 @@ int checkButton()
   
   delay(100);  
 }
-
